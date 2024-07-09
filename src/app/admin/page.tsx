@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 import SideNav from './components/SideNav';
 import Content from './components/Content';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation'; // Import from next/navigation
+import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
 
 function AdminPage() {
     const { data: session, status } = useSession();
@@ -27,7 +27,7 @@ function AdminPage() {
         if (status === 'loading') return; // Do nothing while session is loading
         if (!session) {
             router.push('/login'); // Redirect if no session
-        } else if (session?.user?.role !== 'admin') {
+        } else if (session.user?.role !== 'admin') {
             router.push('/welcome'); // Redirect if not an admin
         }
     }, [session, status, router]);
