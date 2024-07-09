@@ -1,11 +1,14 @@
-import React from 'react'
-import Link from 'next/link'
-import Logo from '../../../../public/next.svg'
-import Image from 'next/image'
-import { signOut } from 'next-auth/react'
+import React from 'react';
+import Link from 'next/link';
+import Logo from '../../../../public/next.svg';
+import Image from 'next/image';
+import { signOut } from 'next-auth/react';
 
+interface AdminNavProps {
+  session: any; // หรือใช้ชนิดข้อมูลที่ถูกต้องของ session แทนที่ any
+}
 
-function AdminNav({ session }) {
+function AdminNav({ session }: AdminNavProps) {
   return (
     <nav className='shadow-xl'>
       <div className='container mx-auto'>
@@ -22,7 +25,6 @@ function AdminNav({ session }) {
                 <li className='mx-3'><Link href="/register">ลงทะเบียน</Link></li>
               </>
             ) : (
-
               <li className='mx-3'>
                 <a className='bg-red-500 text-white border px-2 py-1 rounded-md text-md my-2 ml-2 cursor-pointer' onClick={() => signOut()}>ออกจากระบบ</a>
               </li>
@@ -31,7 +33,7 @@ function AdminNav({ session }) {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
-export default AdminNav
+export default AdminNav;
