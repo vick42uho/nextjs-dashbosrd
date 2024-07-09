@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-function Container({ children }) {
+function Container({ children }: { children: React.ReactNode }) {
   return (
     <div className='flex flex-col min-h-screen'>
       {children}
     </div>
-  )
+  );
 }
 
-export default Container
+export default Container;
