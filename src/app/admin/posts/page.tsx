@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 import AdminNav from '../components/AdminNav';
 import Container from '../components/Container';
@@ -8,57 +7,58 @@ import SideNav from '../components/SideNav';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';  // Import useRouter for client-side navigation
+import LoadingSpinner from '../components/LoadingSpinner';
 import DeleteBtn from './DeleteBtn';
+
+interface Post {
+    _id: string;
+    title: string;
+    img: string;
+    content: string;
+}
 
 function AdminPostManagePage() {
     const { data: session, status } = useSession();
-    const router = useRouter();  // Initialize useRouter hook
+    const [allPostsData, setAllPostsData] = useState<Post[]>([]);
+    const [loadingSession, setLoadingSession] = useState(true);
 
-    const [allPostsData, setAllPostsData] = useState([]);
-    const [loadingSession, setLoadingSession] = useState(true);  // Add loadingSession state
-
-    // Handle session loading and redirection
     useEffect(() => {
         if (status === 'loading') {
-            setLoadingSession(true);  // Set loadingSession to true while session is loading
+            setLoadingSession(true);
         } else {
-            setLoadingSession(false);  // Set loadingSession to false when session loading is complete
+            setLoadingSession(false);
             if (!session) {
-                router.push('/login');  // Redirect to login if session is not available
+                window.location.href = '/login';
             } else if (session?.user?.role !== 'admin') {
-                router.push('/welcome');  // Redirect to welcome page if user is not admin
+                window.location.href = '/welcome';
             }
         }
-    }, [session, status, router]);
+    }, [session, status]);
 
-    // Fetch all posts data
-    const getAllPostsData = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/totalposts`, {
-                cache: 'no-store'
-            });
-
-            if (!res.ok) {
-                throw new Error('Failed to fetch posts');
-            }
-
-            const data = await res.json();
-            setAllPostsData(data.totalPosts);
-
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    // Fetch posts data on component mount
     useEffect(() => {
+        const getAllPostsData = async () => {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/totalposts`, {
+                    cache: 'no-store'
+                });
+
+                if (!res.ok) {
+                    throw new Error('Failed to fetch posts');
+                }
+
+                const data = await res.json();
+                setAllPostsData(data.totalPosts);
+
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
         getAllPostsData();
     }, []);
 
-    // Render loading state while session is loading or not available
     if (status === 'loading' || loadingSession) {
-        return <p>กำลังโหลด...</p>;
+        return <LoadingSpinner />;
     }
 
     return (
@@ -70,9 +70,9 @@ function AdminPostManagePage() {
                         <SideNav />
                         <div className='p-10'>
                             <h3 className='text-3xl md-3'>
-                                จัดการโพส
+                                จัดการโพสต์
                             </h3>
-                            <p>รายการโพส</p>
+                            <p>รายการโพสต์</p>
 
                             <div className='shadow-lg overflow-x-auto'>
                                 <table className='text-left rounded-md mt-3 table-fixed w-full'>
@@ -86,7 +86,7 @@ function AdminPostManagePage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {allPostsData?.map((post, index) => (
+                                        {allPostsData.map((post, index) => (
                                             <tr key={index}>
                                                 <td className='p-5'>{index + 1}</td>
                                                 <td className='p-5'>{post.title}</td>
@@ -117,3 +117,4 @@ function AdminPostManagePage() {
 }
 
 export default AdminPostManagePage;
+

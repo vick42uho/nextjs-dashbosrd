@@ -80,7 +80,7 @@ function EditPage({ params }: EditPageProps) {
             <AdminNav session={session} />
             <div className='flex-grow'>
                 <div className='container mx-auto shadow-xl my-10 p-10 rounded-xl'>
-                    <Link href="/welcome" passHref className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
+                    <Link href="/admin/posts" passHref className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
                  
                             กลับ
                    
