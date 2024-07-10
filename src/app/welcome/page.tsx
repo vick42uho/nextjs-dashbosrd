@@ -7,7 +7,7 @@ import Container from '../components/Container';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import DeleteBtn from './DeleteBtn';
 
 interface PostData {
@@ -17,10 +17,10 @@ interface PostData {
     content: string;
 }
 
-function WelcomePage() {
+const WelcomePage: React.FC = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [postData, setPostsData] = useState<PostData[]>([]); // Define the type of postData
+    const [postData, setPostsData] = useState<PostData[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -88,21 +88,16 @@ function WelcomePage() {
                     {/* User Posts Data */}
                     <div>
                         {postData && postData.length > 0 ? (
-                            postData.map(val => (
+                            postData.map((val) => (
                                 <div key={val._id} className='shadow-xl my-10 p-10 rounded-xl'>
                                     <h4 className='text-3xl'>{val.title}</h4>
-                                    <div className='relative w-full h-96'>
-                                        <Image
-                                            src={val.img}
-                                            layout="fill"
-                                            objectFit="cover"
-                                            alt="post image"
-                                        />
-                                    </div>
+                                    <Image src={val.img} width={300} height={200} alt="post image" />
                                     <p>{val.content}</p>
                                     <div className='mt-5'>
-                                        <Link href={`/edit/${val._id}`} className='bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 my-2  mr-2 text-sm rounded-md'>
-                                            แก้ไขโพส
+                                        <Link href={`/edit/${val._id}`}>
+                                            <a className='bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
+                                                แก้ไขโพสต์
+                                            </a>
                                         </Link>
                                         <DeleteBtn id={val._id} />
                                     </div>
@@ -110,7 +105,7 @@ function WelcomePage() {
                             ))
                         ) : (
                             <p className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
-                                ยังไม่มีโพส
+                                ยังไม่มีโพสต์
                             </p>
                         )}
                     </div>
@@ -119,6 +114,6 @@ function WelcomePage() {
             <Footer />
         </Container>
     );
-}
+};
 
 export default WelcomePage;

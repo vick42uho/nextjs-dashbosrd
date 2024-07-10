@@ -58,7 +58,7 @@ function RegisterPage() {
             if (res.ok) {
                 setError('');
                 setSuccess(
-                    'สร้างบัญชีสําเร็จ เข้าสู่ระบบ'
+                    'ลงทะเบียนผู้ใช้งานเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ',
                 );
                 setName('');
                 setEmail('');
