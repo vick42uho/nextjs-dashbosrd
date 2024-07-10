@@ -3,8 +3,8 @@ import { FaUsers, FaRegNewspaper } from 'react-icons/fa';
 import Link from 'next/link';
 
 interface ContentProps {
-    totalUsersData: any[]; // ยังคงเป็น array
-    totalPostsData: any[]; // ยังคงเป็น array
+    totalUsersData: String | Number | undefined | null; // ยังคงเป็น array
+    totalPostsData: String | Number | undefined | null; // ยังคงเป็น array
 }
 
 function Content({ totalUsersData, totalPostsData }: ContentProps) {
