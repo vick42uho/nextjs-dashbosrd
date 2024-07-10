@@ -3,8 +3,8 @@ import { FaUsers, FaRegNewspaper } from 'react-icons/fa';
 import Link from 'next/link';
 
 interface ContentProps {
-    totalUsersData: any[]; // ประเภทของข้อมูลผู้ใช้งาน
-    totalPostsData: any[]; // ประเภทของข้อมูลโพสต์
+    totalUsersData: any[]; // ยังคงเป็น array
+    totalPostsData: any[]; // ยังคงเป็น array
 }
 
 function Content({ totalUsersData, totalPostsData }: ContentProps) {
@@ -17,7 +17,7 @@ function Content({ totalUsersData, totalPostsData }: ContentProps) {
                     </Link>
                     <p className='text-5xl mt-10'>
                         <Link href='/admin/users'>
-                            {totalUsersData.length}
+                            {totalUsersData.length} {/* ใช้ .length เพื่อแสดงจำนวน */}
                         </Link>
                     </p>
                 </div>
@@ -28,7 +28,7 @@ function Content({ totalUsersData, totalPostsData }: ContentProps) {
                     </Link>
                     <p className='text-5xl mt-10'>
                         <Link href='/admin/posts'>
-                            {totalPostsData.length}
+                            {totalPostsData.length} {/* ใช้ .length เพื่อแสดงจำนวน */}
                         </Link>
                     </p>
                 </div>

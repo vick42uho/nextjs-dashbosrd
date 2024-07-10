@@ -10,8 +10,8 @@ import Content from './components/Content';
 import LoadingSpinner from './components/LoadingSpinner';
 
 type DataType = {
-    users: number;
-    posts: number;
+    users: any;
+    posts: any;
 };
 
 function AdminPage() {
