@@ -1,30 +1,35 @@
-"use client"
-import React, { useState, useEffect } from 'react'
+"use client";
+import React, { useState, useEffect } from 'react';
 import AdminNav from '../../../../admin/components/AdminNav';
 import Container from '../../../../admin/components/Container';
 import Footer from '../../../../admin/components/Footer';
-import Link from 'next/link'
-import { useSession } from 'next-auth/react'
-import { redirect, useRouter } from 'next/navigation'
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-function EditPage({ params }) {
+interface EditPageProps {
+    params: {
+        id: string; // กำหนดชนิดของ id เป็น string หรือตามที่เหมาะสม
+    };
+}
 
+function EditPage({ params }: EditPageProps) {
     const { data: session } = useSession();
     const router = useRouter();
 
-    if (!session) {
-        redirect('/login');
-    }
+    useEffect(() => {
+        if (!session) {
+            router.push('/login');
+        }
+    }, [session, router]);
 
     const { id } = params;
     const [postData, setPostsData] = useState({});
-
-    // New data of post
     const [newTitle, setNewTitle] = useState('');
     const [newImg, setNewImg] = useState('');
     const [newContent, setNewContent] = useState('');
 
-    const getPostById = async (id) => {
+    const getPostById = async (id: string) => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}`, {
                 method: 'GET',
@@ -40,7 +45,6 @@ function EditPage({ params }) {
             setNewTitle(data.post.title);
             setNewImg(data.post.img);
             setNewContent(data.post.content);
-
         } catch (error) {
             console.log(error);
         }
@@ -50,7 +54,7 @@ function EditPage({ params }) {
         getPostById(id);
     }, [id]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}`, {
@@ -66,7 +70,6 @@ function EditPage({ params }) {
             }
 
             router.push('/admin/posts');
-
         } catch (error) {
             console.log(error);
         }
@@ -77,8 +80,10 @@ function EditPage({ params }) {
             <AdminNav session={session} />
             <div className='flex-grow'>
                 <div className='container mx-auto shadow-xl my-10 p-10 rounded-xl'>
-                    <Link href="/welcome" className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
-                        กลับ
+                    <Link href="/welcome" passHref className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
+                 
+                            กลับ
+                   
                     </Link>
                     <hr className='my-3' />
                     <h3 className='text-3xl'>แก้ไขโพส</h3>
@@ -105,7 +110,6 @@ function EditPage({ params }) {
                         />
                         <button
                             type='submit'
-                            name='update'
                             className='w-[400px] block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'
                         >
                             อัปเดต
