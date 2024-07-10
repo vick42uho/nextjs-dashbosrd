@@ -56,14 +56,14 @@ function RegisterPage() {
             });
 
             if (res.ok) {
-                const form = e.currentTarget;
                 setError('');
                 setSuccess(
-                    <p>
-                        สร้างบัญชีสําเร็จ <Link href="/login" className="text-blue-500 hover:underline">เข้าสู่ระบบ</Link>
-                    </p>
+                    'สร้างบัญชีสําเร็จ เข้าสู่ระบบ'
                 );
-                form.reset();
+                setName('');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
                 console.log('User Success Register');
             } else {
                 console.log('User Failed Register');
@@ -75,7 +75,7 @@ function RegisterPage() {
 
     return (
         <Container>
-            <Navbar />
+            <Navbar session={undefined} />
             <div className='flex-grow'>
                 <div className='flex justify-center items-center'>
                     <div className='w-[400px] shadow-2xl p-10 mt-5 rounded-xl'>
@@ -86,24 +86,28 @@ function RegisterPage() {
                             {success && <p className='text-green-500'>{success}</p>}
                             <input 
                                 type="text" 
+                                value={name}
                                 onChange={(e) => setName(e.target.value)} 
                                 className='w-full py-3 rounded my-2 border px-3 bg-gray-50' 
                                 placeholder='ชื่อ' 
                             />
                             <input 
                                 type="email" 
+                                value={email}
                                 onChange={(e) => setEmail(e.target.value)} 
                                 className='w-full py-3 rounded my-2 border px-3 bg-gray-50' 
                                 placeholder='อีเมล' 
                             />
                             <input 
                                 type="password" 
+                                value={password}
                                 onChange={(e) => setPassword(e.target.value)} 
                                 className='w-full py-3 rounded my-2 border px-3 bg-gray-50' 
                                 placeholder='รหัสผ่าน' 
                             />
                             <input 
                                 type="password" 
+                                value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)} 
                                 className='w-full py-3 rounded my-2 border px-3 bg-gray-50' 
                                 placeholder='ยืนยันรหัสผ่าน' 
