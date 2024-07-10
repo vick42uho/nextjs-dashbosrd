@@ -1,19 +1,26 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import Container from '../components/Container'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import DeleteBtn from './DeleteBtn'
+import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import Container from '../components/Container';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import DeleteBtn from './DeleteBtn';
+
+interface PostData {
+    _id: string;
+    title: string;
+    img: string;
+    content: string;
+}
 
 function WelcomePage() {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [postData, setPostsData] = useState([]);
+    const [postData, setPostsData] = useState<PostData[]>([]); // Define the type of postData
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -47,6 +54,13 @@ function WelcomePage() {
         if (session) getPosts();
     }, [session]);
 
+    useEffect(() => {
+        // Redirect to login if session is no longer valid
+        if (status === 'unauthenticated') {
+            router.push('/login');
+        }
+    }, [status, router]);
+
     if (status === 'loading' || loading) {
         return <p>กำลังโหลด...</p>; // Show loading state
     }
@@ -77,7 +91,14 @@ function WelcomePage() {
                             postData.map(val => (
                                 <div key={val._id} className='shadow-xl my-10 p-10 rounded-xl'>
                                     <h4 className='text-3xl'>{val.title}</h4>
-                                    <Image src={val.img} width={300} height={0} alt="post image" />
+                                    <div className='relative w-full h-96'>
+                                        <Image
+                                            src={val.img}
+                                            layout="fill"
+                                            objectFit="cover"
+                                            alt="post image"
+                                        />
+                                    </div>
                                     <p>{val.content}</p>
                                     <div className='mt-5'>
                                         <Link href={`/edit/${val._id}`} className='bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 my-2  mr-2 text-sm rounded-md'>
