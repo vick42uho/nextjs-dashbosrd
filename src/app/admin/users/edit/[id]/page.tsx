@@ -6,27 +6,31 @@ import Container from '../../../components/Container';
 import Footer from '../../../components/Footer';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-function AdminEditPage({ params }) {
+interface Params {
+  id: string;
+}
+
+function AdminEditPage({ params }: { params: Params }) {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const { id } = params;
+  const router = useRouter();
 
-  const [userOldData, setUserOldData] = useState({});
-  const [newName, setNewName] = useState('');
-  const [newEmail, setNewEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [userOldData, setUserOldData] = useState<any>({});
+  const [newName, setNewName] = useState<string>('');
+  const [newEmail, setNewEmail] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
 
   useEffect(() => {
     if (status === 'loading') return;
 
     if (!session) {
-      redirect('/login');
+      router.push('/login');
     } else if (session?.user?.role !== 'admin') {
-      redirect('/welcome');
+      router.push('/welcome');
     }
-  }, [session, status]);
+  }, [session, status, router]);
 
   useEffect(() => {
     if (id) {
@@ -34,7 +38,7 @@ function AdminEditPage({ params }) {
     }
   }, [id]);
 
-  const getUserById = async (id) => {
+  const getUserById = async (id: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/totalusers/${id}`, {
         method: 'GET',
@@ -49,18 +53,17 @@ function AdminEditPage({ params }) {
       setUserOldData(data.user);
       setNewName(data.user.name);
       setNewEmail(data.user.email);
-      // ไม่ต้องตั้งค่า newPassword ใน useEffect เพราะเราไม่ต้องการให้แสดงรหัสผ่านเดิมในฟอร์ม
 
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const body = {};
+      const body: any = {};
       if (newName.trim() !== '') {
         body.newName = newName;
       }
@@ -83,8 +86,7 @@ function AdminEditPage({ params }) {
         throw new Error('Failed to update user');
       }
 
-      router.refresh();
-      router.push('/admin/users');
+      router.push('/admin/users'); // ใช้ router.push แทนการใช้ redirect
 
     } catch (error) {
       console.log(error);
@@ -118,7 +120,7 @@ function AdminEditPage({ params }) {
               value={newEmail}
             />
             <input
-              type="text"
+              type="password"
               className='w-[400px] block py-3 rounded my-2 border px-3 bg-gray-50'
               placeholder='******'
               onChange={(e) => setNewPassword(e.target.value)}
