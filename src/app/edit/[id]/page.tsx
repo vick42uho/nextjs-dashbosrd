@@ -1,21 +1,21 @@
-"use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import AdminNav from '../../components/Navbar';
 import Container from '../../components/Container';
 import Footer from '../../components/Footer';
-import Link from 'next/link'
-import { useSession } from 'next-auth/react'
-import { redirect, useRouter, useParams } from 'next/navigation'
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { redirect, useRouter } from 'next/navigation';
 
-// ระบุประเภทสำหรับ `params`
-interface Params {
-    id: string;
+// ระบุประเภทของ params ให้ชัดเจน
+interface EditPageProps {
+    params: {
+        id: string;
+    };
 }
 
-const PostEdit = () => {
+function EditPage({ params }: EditPageProps) {
     const { data: session } = useSession();
     const router = useRouter();
-    const params = useParams<Params>();
     const { id } = params;
 
     if (!session) {
@@ -126,4 +126,4 @@ const PostEdit = () => {
     );
 }
 
-export default PostEdit;
+export default EditPage;
