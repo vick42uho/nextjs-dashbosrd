@@ -11,10 +11,17 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import DeleteBtn from './DeleteBtn'
 
+interface User {
+    _id: string;
+    name: string;
+    email: string;
+    role: string;
+}
+
 function AdminUserManagePage() {
     const { data: session, status } = useSession()
     const router = useRouter()
-    const [allUsersData, setAllUsersData] = useState([])
+    const [allUsersData, setAllUsersData] = useState<User[]>([])
     const [loadingSession, setLoadingSession] = useState(true)
 
     // ตรวจสอบ session และ redirect ไปที่หน้า login หากไม่มี session
@@ -88,7 +95,7 @@ function AdminUserManagePage() {
                                     </thead>
                                     <tbody>
                                         {allUsersData.map((user, index) => (
-                                            <tr key={index} className='bg-gray-200'>
+                                            <tr key={user._id} className='bg-gray-200'>
                                                 <td className='p-5'>{index + 1}</td>
                                                 <td className='p-5'>{user.name}</td>
                                                 <td className='p-5'>{user.email}</td>
