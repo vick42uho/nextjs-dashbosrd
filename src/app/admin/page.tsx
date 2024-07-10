@@ -9,14 +9,19 @@ import SideNav from './components/SideNav';
 import Content from './components/Content';
 import LoadingSpinner from './components/LoadingSpinner';
 
+type DataType = {
+    users: number;
+    posts: number;
+};
+
 function AdminPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [data, setData] = useState({ users: [], posts: [] });
+    const [data, setData] = useState<DataType>({ users: 0, posts: 0 });
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
-    const fetchData = useCallback(async (endpoint) => {
+    const fetchData = useCallback(async (endpoint: 'users' | 'posts') => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/total${endpoint}`, {
                 cache: 'no-store'
@@ -31,7 +36,7 @@ function AdminPage() {
         } catch (error) {
             console.error(`Error fetching ${endpoint}:`, error);
             setError(`Failed to load ${endpoint}. Please try again later.`);
-            return [];
+            return 0;
         }
     }, []);
 
