@@ -19,7 +19,7 @@ function RegisterPage() {
     const { data: session } = useSession();
     if (session) redirect('/welcome');
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             setError('รหัสผ่านไม่ตรงกัน');
@@ -56,7 +56,7 @@ function RegisterPage() {
             });
 
             if (res.ok) {
-                const form = e.target;
+                const form = e.currentTarget;
                 setError('');
                 setSuccess(
                     <p>
