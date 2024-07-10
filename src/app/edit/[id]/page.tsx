@@ -5,26 +5,23 @@ import Container from '../../components/Container';
 import Footer from '../../components/Footer';
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import { redirect, useRouter } from 'next/navigation'
+import { redirect, useRouter, useParams } from 'next/navigation'
 
 // ระบุประเภทสำหรับ `params`
 interface Params {
     id: string;
 }
 
-interface PostEditProps {
-    params: Params;
-}
-
-function PostEdit({ params }: PostEditProps) {
+const PostEdit = () => {
     const { data: session } = useSession();
     const router = useRouter();
+    const params = useParams<Params>();
+    const { id } = params;
 
     if (!session) {
         redirect('/login');
     }
 
-    const { id } = params;
     const [postData, setPostsData] = useState({
         title: '',
         img: '',
