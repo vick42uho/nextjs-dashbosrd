@@ -7,8 +7,16 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { redirect, useRouter } from 'next/navigation'
 
-function PostEdit({ params }) {
+// ระบุประเภทสำหรับ `params`
+interface Params {
+    id: string;
+}
 
+interface PostEditProps {
+    params: Params;
+}
+
+function PostEdit({ params }: PostEditProps) {
     const { data: session } = useSession();
     const router = useRouter();
 
@@ -17,14 +25,17 @@ function PostEdit({ params }) {
     }
 
     const { id } = params;
-    const [postData, setPostsData] = useState({});
+    const [postData, setPostsData] = useState({
+        title: '',
+        img: '',
+        content: ''
+    });
 
-    // New data of post
     const [newTitle, setNewTitle] = useState('');
     const [newImg, setNewImg] = useState('');
     const [newContent, setNewContent] = useState('');
 
-    const getPostById = async (id) => {
+    const getPostById = async (id: string) => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}`, {
                 method: 'GET',
@@ -50,7 +61,7 @@ function PostEdit({ params }) {
         getPostById(id);
     }, [id]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}`, {
