@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { ReactNode } from 'react';
 
-function Container({ children }) {
+interface ContainerProps {
+  children: ReactNode;
+}
+
+function Container({ children }: ContainerProps) {
   return (
     <div className='flex flex-col min-h-screen'>
         {children}
@@ -8,4 +12,4 @@ function Container({ children }) {
   )
 }
 
-export default Container
+export default Container;
