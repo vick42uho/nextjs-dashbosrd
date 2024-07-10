@@ -10,14 +10,14 @@ import Content from './components/Content';
 import LoadingSpinner from './components/LoadingSpinner';
 
 type DataType = {
-    users: string | number | undefined | null;
-    posts: string | number | undefined | null;
+    users: string[] | number[] | null | undefined;
+    posts: string[] | number[] | null | undefined;
 };
 
 function AdminPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [data, setData] = useState<DataType>({ users: 0, posts: 0 });
+    const [data, setData] = useState<DataType>({ users: [], posts: [] }); // ตั้งค่าเริ่มต้นเป็น array ว่าง
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
