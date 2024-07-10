@@ -94,10 +94,8 @@ const WelcomePage: React.FC = () => {
                                     <Image src={val.img} width={300} height={200} alt="post image" />
                                     <p>{val.content}</p>
                                     <div className='mt-5'>
-                                        <Link href={`/edit/${val._id}`}>
-                                            <a className='bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
+                                        <Link href={`/edit/${val._id}`} className='bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 my-2 mr-2 text-sm rounded-md'>
                                                 แก้ไขโพสต์
-                                            </a>
                                         </Link>
                                         <DeleteBtn id={val._id} />
                                     </div>
