@@ -1,82 +1,67 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import AdminNav from './components/AdminNav';
 import Container from './components/Container';
 import Footer from './components/Footer';
 import SideNav from './components/SideNav';
 import Content from './components/Content';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
+import LoadingSpinner from './components/LoadingSpinner';
 
 function AdminPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [totalUsersData, setTotalUsersData] = useState([]);
-    const [totalPostsData, setTotalPostsData] = useState([]);
+    const [data, setData] = useState({ users: [], posts: [] });
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (status === 'loading') {
-            setLoading(true); // Set loading to true while session is loading
-        } else {
-            setLoading(false); // Set loading to false once session status is determined
+    const fetchData = useCallback(async (endpoint) => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/total${endpoint}`, {
+                cache: 'no-store'
+            });
+
+            if (!res.ok) {
+                throw new Error(`Failed to fetch ${endpoint}`);
+            }
+
+            const result = await res.json();
+            return result[`total${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`];
+        } catch (error) {
+            console.error(`Error fetching ${endpoint}:`, error);
+            setError(`Failed to load ${endpoint}. Please try again later.`);
+            return [];
         }
-    }, [status]);
+    }, []);
 
     useEffect(() => {
-        if (status === 'loading') return; // Do nothing while session is loading
+        if (status === 'loading') return;
+
         if (!session) {
-            router.push('/login'); // Redirect if no session
+            router.push('/login');
         } else if (session.user?.role !== 'admin') {
-            router.push('/welcome'); // Redirect if not an admin
+            router.push('/welcome');
+        } else {
+            const loadData = async () => {
+                setLoading(true);
+                const [users, posts] = await Promise.all([
+                    fetchData('users'),
+                    fetchData('posts')
+                ]);
+                setData({ users, posts });
+                setLoading(false);
+            };
+            loadData();
         }
-    }, [session, status, router]);
-
-    const getTotalUsers = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/totalusers`, {
-                cache: 'no-store'
-            });
-
-            if (!res.ok) {
-                throw new Error('Failed to fetch total users');
-            }
-
-            const data = await res.json();
-            setTotalUsersData(data.totalUsers);
-
-        } catch (error) {
-            console.error('Error fetching total users:', error);
-        }
-    }
-
-    const getTotalPosts = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/totalposts`, {
-                cache: 'no-store'
-            });
-
-            if (!res.ok) {
-                throw new Error('Failed to fetch total posts');
-            }
-
-            const data = await res.json();
-            setTotalPostsData(data.totalPosts);
-
-        } catch (error) {
-            console.error('Error fetching total posts:', error);
-        }
-    }
-
-    useEffect(() => {
-        if (!loading) {
-            getTotalUsers();
-            getTotalPosts();
-        }
-    }, [loading]);
+    }, [session, status, router, fetchData]);
 
     if (status === 'loading' || loading) {
-        return <p>กำลังโหลด...</p>; // Show loading state while session and data are loading
+        return <LoadingSpinner />;
+    }
+
+    if (error) {
+        return <div className="error-message">{error}</div>;
     }
 
     return (
@@ -86,13 +71,13 @@ function AdminPage() {
                 <div className='container mx-auto'>
                     <div className='flex mt-10 my-10 mx-10'>
                         <SideNav />
-                        <Content totalUsersData={totalUsersData} totalPostsData={totalPostsData} />
+                        <Content totalUsersData={data.users} totalPostsData={data.posts} />
                     </div>
                 </div>
             </div>
             <Footer />
         </Container>
-    )
+    );
 }
 
 export default AdminPage;
