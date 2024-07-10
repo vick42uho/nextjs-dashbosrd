@@ -3,8 +3,8 @@ import { FaUsers, FaRegNewspaper } from 'react-icons/fa';
 import Link from 'next/link';
 
 interface ContentProps {
-    totalUsersData: string | number | undefined | null;
-    totalPostsData: string | number | undefined | null;
+    totalUsersData: string[] | number[] | undefined | null; // กำหนดให้เป็น array หรือ undefined/null
+    totalPostsData: string[] | number[] | undefined | null; // กำหนดให้เป็น array หรือ undefined/null
 }
 
 function Content({ totalUsersData, totalPostsData }: ContentProps) {
@@ -17,7 +17,7 @@ function Content({ totalUsersData, totalPostsData }: ContentProps) {
                     </Link>
                     <p className='text-5xl mt-10'>
                         <Link href='/admin/users'>
-                            {totalUsersData ? totalUsersData.length : 0} {/* ตรวจสอบว่า totalUsersData ไม่ใช่ null หรือ undefined ก่อนที่จะใช้ .length */}
+                            {totalUsersData ? totalUsersData.length : 0} {/* ตรวจสอบว่า totalUsersData ไม่ใช่ null หรือ undefined และเป็น array ก่อนที่จะใช้ .length */}
                         </Link>
                     </p>
                 </div>
@@ -28,7 +28,7 @@ function Content({ totalUsersData, totalPostsData }: ContentProps) {
                     </Link>
                     <p className='text-5xl mt-10'>
                         <Link href='/admin/posts'>
-                            {totalPostsData ? totalPostsData.length : 0} {/* ตรวจสอบว่า totalPostsData ไม่ใช่ null หรือ undefined ก่อนที่จะใช้ .length */}
+                            {totalPostsData ? totalPostsData.length : 0} {/* ตรวจสอบว่า totalPostsData ไม่ใช่ null หรือ undefined และเป็น array ก่อนที่จะใช้ .length */}
                         </Link>
                     </p>
                 </div>
