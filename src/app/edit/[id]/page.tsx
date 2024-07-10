@@ -1,4 +1,3 @@
-// ตัวอย่างเพิ่ม use client ที่ด้านบนของไฟล์ page.tsx
 "use client";
 import React, { useState, useEffect } from 'react';
 import AdminNav from '../../components/Navbar';
